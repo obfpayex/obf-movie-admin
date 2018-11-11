@@ -1,0 +1,41 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration is used for unit/integration tests.
+# ===================================================================
+
+application:
+    foo: bar
+    bar: foo
+    foo-bar:
+      foo: foobar
+      bar: foobar
+
+server:
+    port: 13380
+
+spring:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:mem:test;Mode=Oracle;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS accounting
+
+        username:
+        password:
+        driverClassName: org.h2.Driver
+        hikari:
+            maximum-pool-size: 5
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        database: H2
+        open-in-view: false
+        show_sql: false
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate.dialect: org.hibernate.dialect.H2Dialect
+            hibernate.cache.use_second_level_cache: false #No EhCache
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+
+    

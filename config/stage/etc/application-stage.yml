@@ -1,0 +1,34 @@
+# ===============================
+# = Application specific config =
+# ===============================
+
+spring:
+    profiles:
+        active: stage
+        include: swagger
+
+    datasource:
+        hikari:
+            maximum-pool-size: 8
+            pool-name: HikariPool
+
+
+
+
+surveillance:
+    url: "http://seutv819as.utvnet.net:8080/cam-admin-rest/admin/cam/scheduled-executed"
+    interval-in-milliseconds: 900000 #15 minutes
+
+application:
+    async:
+        core-pool-size: 2
+        max-pool-size: 50
+        queue-capacity: 10000
+
+
+
+    foo: bar
+    bar: foo
+    foo-bar:
+      foo: foobar
+      bar: foobar

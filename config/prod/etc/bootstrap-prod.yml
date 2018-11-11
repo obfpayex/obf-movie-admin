@@ -1,0 +1,9 @@
+spring:
+    cloud:
+        vault:
+            app-role:
+                role: vas-readonly
+                role-id: 0a8bc6a9-b447-d12e-7c21-3f0b68230cbd
+                secret-id: 80bd325e-dd6a-1aea-3dab-9c360041f380
+            authentication: approle
+            host: sevis356as

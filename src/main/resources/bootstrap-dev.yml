@@ -1,0 +1,10 @@
+spring:
+    profiles:
+        active: dev
+    cloud:
+        vault:
+            app-role:
+                role: vas-readonly
+                role-id: 3d001a8a-c061-ffc5-155a-94be7ed087c3
+                secret-id: f0361208-86a0-07aa-ec74-db69b660c04f
+            authentication: approle

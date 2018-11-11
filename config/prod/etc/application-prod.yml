@@ -1,0 +1,33 @@
+# ===============================
+# = Application specific config =
+# ===============================
+
+spring:
+    profiles:
+        active: prod
+
+    datasource:
+        hikari:
+            maximum-pool-size: 8
+            pool-name: HikariPool
+
+
+
+
+surveillance:
+    url: "http://10.220.5.34:8088/cam-admin-rest/admin/cam/scheduled-executed"
+    interval-in-milliseconds: 900000 #15 minutes
+
+application:
+    async:
+        core-pool-size: 2
+        max-pool-size: 50
+        queue-capacity: 10000pacity: 10000
+
+
+
+    foo: bar
+    bar: foo
+    foo-bar:
+      foo: foobar
+      bar: foobar

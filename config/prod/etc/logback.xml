@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <property name="LOG_FILE_NAME" value="vas-accounting-receiptfile-import"/>
+    <property name="SERVICE_NAME" value="VasAccountingReceiptfileImport"/> <!-- Only letters, no spaces! -->
+    <property name="SYSTEM" value="ACCOUNTING"/>
+    <property name="LOG_ROOT_PATH" value="E:/PXS/pxs_services/accounting/vas-accounting-receiptfile-import"/>
+
+
+    <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
+
+    <appender name="REGULAR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/applog/${LOG_FILE_NAME}.log</file>
+        <encoder>
+            <pattern>%d|${SERVICE_NAME}|%X{Session-Id}|%logger{0}|%level|%msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_ROOT_PATH}/applog/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <appender name="SLA-API" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.api.log</file>
+        <encoder>
+            <pattern>%d|${SERVICE_NAME}|%X{Session-Id}|API||%X{Request-Method}|%X{Uri-Path}|%X{Client-Id}|${SYSTEM}|%X{Response-Code}||%X{Response-Time}|-1|-1|%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.api.log</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SLA-DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.db.log</file>
+        <encoder>
+            <pattern>%d|${SERVICE_NAME}|%X{Session-Id}|DATABASE|%X{Query-Type}|%X{Query-Time}|%msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.db.log</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SLA-REMOTE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.remote.log</file>
+        <encoder>
+            <pattern>%d|${SERVICE_NAME}|%X{Session-Id}|REMOTECALL|%X{Request-Protocol}|%X{Uri}|%X{Response-Text}|%X{Response-Time}%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_ROOT_PATH}/sla/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.remote.log</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="SlaApiLog" level="INFO" additivity="false">
+        <appender-ref ref="SLA-API"/>
+    </logger>
+
+    <logger name="SlaDbLog" level="INFO" additivity="false">
+        <appender-ref ref="SLA-DB"/>
+    </logger>
+
+    <logger name="SlaRemoteLog" level="INFO" additivity="false">
+        <appender-ref ref="SLA-REMOTE"/>
+    </logger>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/error/${LOG_FILE_NAME}_error.log</file>
+        <encoder>
+            <pattern>%d %-5level [%thread] [%X{Session-Id}] %logger{0}: %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_ROOT_PATH}/error/${LOG_FILE_NAME}_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!-- HTTP request/response log -->
+    <appender name="HTTP_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROOT_PATH}/http/${LOG_FILE_NAME}.http.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ROOT_PATH}/http.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>%d %level [%thread] [%X{Session-Id}] %logger{0}: %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="HttpLog" level="DEBUG" additivity="false">
+        <appender-ref ref="HTTP_LOG"/>
+    </logger>
+
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>100000</queueSize>
+        <appender-ref ref="REGULAR"/>
+        <appender-ref ref="SLA-API"/>
+        <appender-ref ref="SLA-DB"/>
+        <appender-ref ref="SLA-REMOTE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="HTTP_LOG"/>
+    </appender>
+
+
+    <logger name="com.ryantenney.metrics.spring" level="INFO"/>
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="net.sf.ehcache" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="liquibase" level="WARN"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="com.payex" level="DEBUG"/>
+    <logger name="org.exolab.castor" level="ERROR"/>
+    <logger name="org.castor.core" level="ERROR"/>
+    <logger name="no.pxs.evc.common.xml.parser" level="ERROR"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+
+
+    <root level="INFO">
+        <appender-ref ref="REGULAR"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+
+    <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+</configuration>

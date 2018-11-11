@@ -1,0 +1,22 @@
+spring.cloud.vault:
+    ssl:
+        trust-store: classpath:ssl/vault-keystore.jks
+        trust-store-password: changeit
+    host: seutv307as.utvnet.net
+    port: 8200
+    scheme: https
+    connection-timeout: 5000
+    read-timeout: 15000
+    config:
+        order: -10
+    fail-fast: true # Fails startup if Vault is not found
+    generic:
+        enabled: false
+    kv:
+        enabled: true
+        backend-version: 2
+        backend: vas
+        application-name: vas-accounting-receiptfile-import,vas-encryption
+        default-context: vas-db
+
+# Reference: http://cloud.spring.io/spring-cloud-static/spring-cloud-vault/2.0.0.RELEASE/single/spring-cloud-vault.html

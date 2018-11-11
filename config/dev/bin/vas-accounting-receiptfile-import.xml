@@ -1,0 +1,14 @@
+<service>
+    <id>vas-accounting-receiptfile-import</id>
+    <name>Vas Accounting Receiptfile Import</name>
+    <description>This service runs Vas Accounting Receiptfile Import</description>
+    <env name="ETC_HOME" value="%BASE%\..\..\..\..\etc\accounting\vas-accounting-receiptfile-import\1.0"/>
+    <executable>D:\java\jdk1.8.0_66\bin\java</executable>
+    <arguments>-Xrs -Xmx256m -Dloader.path=%ETC_HOME%/ -jar vas-accounting-receiptfile-import.jar</arguments>
+    <logmode>rotate</logmode>
+    <logpath>%BASE%\stdOut</logpath>
+    <log mode="roll-by-size">
+        <sizeThreshold>10240</sizeThreshold>
+        <keepFiles>8</keepFiles>
+    </log>
+</service>
